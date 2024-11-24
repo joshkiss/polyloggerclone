@@ -36,7 +36,24 @@ func createTables() {
 	)
 	`
 
+	createEntriesTable := `
+	CREATE TABLE IF NOT EXISTS entries (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	title TEXT NOT NULL, 
+	content TEXT NOT NULL, 
+	lang TEXT NOT NULL, 
+	datetime DATETIME NOT NULL, 
+	timespent INTEGER NOT NULL, 
+	type TEXT NOT NULL,
+	user_id INTEGER, FOREIGN KEY (user_id) REFERENCES user(id)
+	)
+	`
+
 	_, err := DB.Exec(createUsersTable)
+	if err != nil {
+		panic("Could not create 'users' table.")
+	}
+	_, err = DB.Exec(createEntriesTable)
 	if err != nil {
 		panic("Could not create 'users' table.")
 	}
