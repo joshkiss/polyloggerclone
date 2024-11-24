@@ -1,5 +1,7 @@
 package utils
 
+// Utility functions for hashing passwords and checking password hash
+
 import "golang.org/x/crypto/bcrypt"
 
 func HashPassword(password string) (string, error) {

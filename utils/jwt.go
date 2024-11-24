@@ -1,5 +1,7 @@
 package utils
 
+// Utility functions for jwt authentication
+
 import (
 	"errors"
 	"os"
