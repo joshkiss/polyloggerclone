@@ -7,14 +7,14 @@ import (
 )
 
 type Entry struct {
-	ID        int64
-	Title     string
-	Content   string
-	Lang      string
-	DateTime  time.Time
-	TimeSpent int64
-	Type      string
-	UserId    int64
+	ID        int64     `json:"id"`
+	Title     string    `json:"title"`
+	Content   string    `json:"content"`
+	Lang      string    `json:"lang"`
+	DateTime  time.Time `json:"datetime"`
+	TimeSpent int64     `json:"time_spent"`
+	Type      string    `json:"type"`
+	UserId    int64     `json:"user_id"`
 }
 
 func (e *Entry) Save() error {
