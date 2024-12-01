@@ -43,7 +43,18 @@ func (e *Entry) Save() error {
 }
 
 func (e *Entry) Update() error {
-	return nil
+	query := `
+	UPDATE entries 
+	SET title = ?, content = ?, lang = ?, datetime = ?, timespent = ?, type = ?, user_id = ? 
+	WHERE id = ?
+	`
+	statement, err := db.DB.Prepare(query)
+	if err != nil {
+		return err
+	}
+	defer statement.Close()
+	_, err = statement.Exec(e.Title, e.Content, e.Lang, e.DateTime, e.TimeSpent, e.Type, e.UserId, e.ID)
+	return err
 }
 
 func GetAllEntries() ([]Entry, error) {
@@ -88,4 +99,17 @@ func GetAllByUser(userId int64) ([]Entry, error) {
 	}
 
 	return entries, nil
+}
+
+func GetEntryByID(id int64) (*Entry, error) {
+	query := "SELECT * FROM entries WHERE id = ?"
+	row := db.DB.QueryRow(query, id)
+
+	var entry Entry
+	err := row.Scan(&entry.ID, &entry.Title, &entry.Content, &entry.Lang, &entry.DateTime, &entry.TimeSpent, &entry.Type, &entry.UserId)
+	if err != nil {
+		return nil, err
+	}
+
+	return &entry, nil
 }
