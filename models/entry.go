@@ -17,6 +17,8 @@ type Entry struct {
 	UserId    int64     `json:"user_id"`
 }
 
+// CRUD Functionality
+
 func (e *Entry) Save() error {
 	query := `INSERT INTO entries 
 	(title, content, lang, datetime, timespent, type, user_id)
@@ -56,6 +58,23 @@ func (e *Entry) Update() error {
 	_, err = statement.Exec(e.Title, e.Content, e.Lang, e.DateTime, e.TimeSpent, e.Type, e.UserId, e.ID)
 	return err
 }
+
+func (e Entry) Delete() error {
+	query := "DELETE FROM entries WHERE id = ?"
+	statement, err := db.DB.Prepare(query)
+	if err != nil {
+		return err
+	}
+	defer statement.Close()
+
+	_, err = statement.Exec(e.ID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// Get entries
 
 func GetAllEntries() ([]Entry, error) {
 	query := "SELECT * FROM entries"
