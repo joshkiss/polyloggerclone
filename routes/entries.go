@@ -55,9 +55,37 @@ func updateEntry(ctx *gin.Context) {
 	updatedEntry.ID = id
 	err = updatedEntry.Update()
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Could not update entry.", "error": err.Error()})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Could not update entry."})
 		return
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"message": "Entry updated successfully."})
+}
+
+// Delete entry
+func deleteEntry(ctx *gin.Context) {
+	id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Could not parse entry id."})
+		return
+	}
+
+	entry, err := models.GetEntryByID(id)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Could not fetch entry."})
+		return
+	}
+
+	if entry.UserId != ctx.GetInt64("userId") {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "Not authorized to delete event."})
+		return
+	}
+
+	err = entry.Delete()
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Could not delete entry."})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"message": "Event deleted successfully."})
 }

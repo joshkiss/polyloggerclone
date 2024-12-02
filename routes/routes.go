@@ -18,7 +18,7 @@ func RegisterRoutes(srv *gin.Engine) {
 	auth.Use(middlewares.Authenticate)
 	auth.POST("/entries", createEntry)
 	auth.PUT("/entries/:id", updateEntry)
-	auth.DELETE("/entries/:id", placeholder)
+	auth.DELETE("/entries/:id", deleteEntry)
 
 	auth.GET("/stats", placeholder) // get stats for user
 	auth.GET("/stats/:lang", placeholder)
